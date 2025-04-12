@@ -3,7 +3,7 @@ const apiKey = '8dc2fe5854874ad09c838ccb8557875e';
 
 const buttons = document.querySelectorAll('.button');
 const articlesContainer = document.querySelector('.articles');
-
+const loader = document.querySelector('.lds-ripple');
 
 buttons.forEach((button, index) => {
     button.addEventListener('click', async () => {
@@ -40,6 +40,8 @@ async function fetchNews(source) {
 function outputInfo(data) {
 
     articlesContainer.innerHTML = '';
+    loader.style.display = 'block';
+    const fragment = new DocumentFragment();
 
     if (data.articles && data.articles.length > 0) {
         data.articles.forEach(article => {
@@ -50,8 +52,11 @@ function outputInfo(data) {
                 <img src="${article.urlToImage}" alt="${article.title}">
                 <p>${article.description}</p>
             `;
-            articlesContainer.appendChild(card);
+            fragment.append(card);
+            // articlesContainer.appendChild(card);
         });
+        articlesContainer.append(fragment);
+        loader.style.display = 'none';
     } else {
         articlesContainer.innerHTML = '<p>Нет новостей для отображения.</p>';
     }
